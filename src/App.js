@@ -1,24 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import * as React from 'react';
+import BasicCard from './components/card';
+import { Button, Container, Grid, Paper, TextField } from '@mui/material';
+import { getWeather } from './client/client';
 
 function App() {
+  const [city, setCity] = React.useState('');
+  const [data, setData] = React.useState();
+
+  const fetchWeather = () => {
+    getWeather(city).then((data) => {
+      console.log(data);
+      setData(data);
+    })
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Grid container spacing={2}>
+        <Grid item xs={2}></Grid>
+        <Grid item xs={8} >
+          <Paper elevation={3} style={{ marginTop: 20, padding: 50, textAlign: 'center' }}>
+            <TextField  
+              label="City" 
+              variant="standard" 
+              value={city} 
+              onChange={(event) => setCity(event.target.value)} 
+            />
+            <br/>
+            <Button 
+              variant='outlined' 
+              style={{ marginTop: 20 }}
+              onClick={() => fetchWeather()}
+            >GET WEATHER</Button>
+          </Paper>
+          {
+            data && (
+              <Paper style={{ marginTop: 20 }}>
+                <BasicCard data={data}/>
+              </Paper>
+            ) 
+          }
+          
+        </Grid>
+      </Grid>
+    </Container>
   );
 }
 
